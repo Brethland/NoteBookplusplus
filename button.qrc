@@ -1,0 +1,17 @@
+<RCC>
+    <qresource prefix="/new/prefix1"/>
+    <qresource prefix="/">
+        <file>src/add.png</file>
+        <file>src/alt.png</file>
+        <file>src/check.png</file>
+        <file>src/delete.png</file>
+        <file>src/lock.png</file>
+        <file>src/menu.png</file>
+        <file>src/settings.png</file>
+        <file>src/refresh.png</file>
+        <file>src/create.png</file>
+        <file>src/filter.png</file>
+        <file>src/sort.png</file>
+        <file>src/expand.png</file>
+    </qresource>
+</RCC>
