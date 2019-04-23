@@ -1,0 +1,14 @@
+0
+2
+1
+1555254543
+1555254543
+Haskell Program
+main :: IO()
+main = do
+    putStrLn "Hello,world!"
+fac :: monad => a -> (a -> b) -> f a -> f b
+fac x y = do
+    mx <- x
+    my <- y
+    pure x + y

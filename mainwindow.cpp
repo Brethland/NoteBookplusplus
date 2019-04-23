@@ -21,61 +21,9 @@
 #include <QFont>
 #include "edit.h"
 #include <QList>
-/*class Cmpare1
-{
-public:
-	bool operator()(const Diary* a,const Diary*  b)
-	{
-		return a->timeCreate < b->timeCreate;
-	}
-};
-class Cmpare2
-{
-public:
-	bool operator()(const Diary* a,const Diary*  b)
-	{
-		return a->timeCreate > b->timeCreate;
-	}
-};
-class Cmpare3
-{
-public:
-	bool operator()(const Diary* a,const Diary*  b)
-	{
-		return a->timeLastEdit < b->timeLastEdit;
-	}
-};
-class Cmpare4
-{
-public:
-	bool operator()(const Diary* a,const Diary*  b)
-	{
-		return a->timeLastEdit > b->timeLastEdit;
-	}
-};*/
-bool sortCreateIncrease(Diary a,Diary b){
-  return long(a.timeCreate) < long(b.timeCreate);
-}
-bool sortCreateDecrease(Diary a,Diary b){
-  return long(a.timeCreate) > long(b.timeCreate);
-}
-bool sortEditIncrease(Diary a,Diary b){
-  return long(a.timeLastEdit) < long(b.timeLastEdit);
-}
+
 bool sortEditDecrease(Diary a,Diary b){
   return long(a.timeLastEdit) > long(b.timeLastEdit);
-}
-void MainWindow::sortTime(int sortMethod){
-  switch(sortMethod){
-    case 1:
-      nowList.sort(sortCreateIncrease);
-    case 2:
-      nowList.sort(sortCreateDecrease);
-    case 3:
-      nowList.sort(sortEditIncrease);
-    case 4:
-      nowList.sort(sortEditDecrease);
-    }
 }
 string cutStr(string original){
   if(original.length()<100){
@@ -120,16 +68,6 @@ MainWindow::MainWindow(QWidget *parent) :
    *filterTodo = new QAction(chooseMenu);
   QAction
    *filterAll = new QAction(chooseMenu);
-  /*QMenu
-      *sortMenu = new QMenu();
-  QAction
-    *sortByCreateInc = new QAction(sortMenu);
-  QAction
-      *sortByCreateDec = new QAction(sortMenu);
-  QAction
-      *sortByEditInc = new QAction(sortMenu);
-  QAction
-      *sortByEditDec = new QAction(sortMenu);*/
 //添加
    pMenu->addAction(sort);
    pMenu->addAction(choose);
@@ -139,11 +77,6 @@ MainWindow::MainWindow(QWidget *parent) :
    chooseMenu->addAction(filterAll);
    chooseMenu->addAction(filterDiary);
    chooseMenu->addAction(filterTodo);
-
-   /*sortMenu->addAction(sortByCreateInc);
-   sortMenu->addAction(sortByCreateDec);
-   sortMenu->addAction(sortByEditInc);
-   sortMenu->addAction(sortByEditDec);*/
 //设置选项
    sort->setText(tr("最近修改"));
    sort->setIcon(QIcon(":/src/sort.png"));
@@ -152,12 +85,7 @@ MainWindow::MainWindow(QWidget *parent) :
    filterAll->setText(tr("全部记事"));
    filterDiary->setText(tr("日记"));
    filterTodo->setText(tr("待办事项"));
-   /*sortByCreateInc->setText(tr("按创建时间升序"));
-   sortByCreateDec->setText(tr("按创建时间降序"));
-   sortByEditInc->setText(tr("按修改时间升序"));
-   sortByEditDec->setText(tr("按修改时间降序"));*/
    choose->setMenu(chooseMenu);
-   //sort->setMenu(sortMenu);
    setting->setText(QString("偏好设置"));
    setting->setIcon(QIcon(":/src/settings.png"));
    sett = new settings;
@@ -166,16 +94,10 @@ MainWindow::MainWindow(QWidget *parent) :
                           QMenu::item:selected{background-color:rgb(220,220,220);}");
    chooseMenu->setStyleSheet("QMenu{background:#f8f8ff;}QMenu::item{color:rgb(105,105,105);}\
                           QMenu::item:selected{background-color:rgb(220,220,220);}");
-   /*sortMenu->setStyleSheet("QMenu{background:#f8f8ff;}QMenu::item{color:rgb(105,105,105);}\
-                          QMenu::item:selected{background-color:rgb(220,220,220);}");*/
    connect(filterAll,SIGNAL(triggered()),this,SLOT(filte0()));
    connect(filterDiary,SIGNAL(triggered()),this,SLOT(filte1()));
    connect(filterTodo,SIGNAL(triggered()),this,SLOT(filte2()));
-   /*connect(sortByCreateInc,SIGNAL(triggered()),this,SLOT(sort1()));
-   connect(sortByCreateDec,SIGNAL(triggered()),this,SLOT(sort2()));
-   connect(sortByEditInc,SIGNAL(triggered()),this,SLOT(sort3()));
-   connect(sortByEditDec,SIGNAL(triggered()),this,SLOT(sort4()));*/
-   connect(sort,SIGNAL(triggered()),this,SLOT(sort4()));
+   connect(sort,SIGNAL(triggered()),this,SLOT(sort1()));
 
 
    //关联菜单按钮
@@ -200,10 +122,7 @@ void MainWindow::showDiary(int filterName){
       newList = filterByMethod(filterName);
     }
   list<Diary>::iterator it;
-  //int ite = 0;
-  //QVBoxLayout *listLayout = new QVBoxLayout();
   for(it = newList.begin();it != newList.end();it++) {
-      //ite++;
       //布局
       QWidget *wid = new QWidget;
       QWidget *textShow = new QWidget(wid);
@@ -250,24 +169,18 @@ void MainWindow::showDiary(int filterName){
       optionLayout->setMargin(0);
       //放置控件
       checkLayout->addWidget(checkDelete);
-      //checkLayout->addStretch();
       textLayout->addWidget(title);
       textLayout->addWidget(cuttedText);
       textLayout->addSpacing(5);
-      //textLayout->addStretch();
       optionLayout->addWidget(moreDetail);
       optionLayout->addWidget(editOption);
-      //optionLayout->addStretch();
       textShow->setLayout(textLayout);
       optionBar->setLayout(optionLayout);
       checkBar->setLayout(checkLayout);
-      //mainLayout->addStretch();
       mainLayout->addWidget(checkBar);
-      //mainLayout->addStretch();
       mainLayout->addWidget(textShow);
       mainLayout->addStretch();
       mainLayout->addWidget(optionBar);
-      //mainLayout->addStretch();
       wid->setLayout(mainLayout);
 
       //最终添加
@@ -277,23 +190,17 @@ void MainWindow::showDiary(int filterName){
       ui->showBox->addItem(qm);
 
       ui->showBox->setItemWidget(qm,wid);
-      //listLayout->addWidget(wid);
     }
-  //ui->showBox->setLayout(listLayout);
   ui->showBox->setStyleSheet("QListWidget{background-color:#f8f8ff;border:none;}");
   ui->showBox->setSpacing(30);
   ui->showBox->setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
-  //cout << ite << endl;
   nowList = newList;
 }
 
 void MainWindow::showDiarysorted(){
   list<Diary> newList = nowList;
   list<Diary>::iterator it;
-  //int ite = 0;
-  //QVBoxLayout *listLayout = new QVBoxLayout();
   for(it = newList.begin();it != newList.end();it++) {
-      //ite++;
       //布局
       QWidget *wid = new QWidget;
       QWidget *textShow = new QWidget(wid);
@@ -340,24 +247,18 @@ void MainWindow::showDiarysorted(){
       optionLayout->setMargin(0);
       //放置控件
       checkLayout->addWidget(checkDelete);
-      //checkLayout->addStretch();
       textLayout->addWidget(title);
       textLayout->addWidget(cuttedText);
       textLayout->addSpacing(5);
-      //textLayout->addStretch();
       optionLayout->addWidget(moreDetail);
       optionLayout->addWidget(editOption);
-      //optionLayout->addStretch();
       textShow->setLayout(textLayout);
       optionBar->setLayout(optionLayout);
       checkBar->setLayout(checkLayout);
-      //mainLayout->addStretch();
       mainLayout->addWidget(checkBar);
-      //mainLayout->addStretch();
       mainLayout->addWidget(textShow);
       mainLayout->addStretch();
       mainLayout->addWidget(optionBar);
-      //mainLayout->addStretch();
       wid->setLayout(mainLayout);
 
       //最终添加
@@ -367,13 +268,10 @@ void MainWindow::showDiarysorted(){
       ui->showBox->addItem(qm);
 
       ui->showBox->setItemWidget(qm,wid);
-      //listLayout->addWidget(wid);
     }
-  //ui->showBox->setLayout(listLayout);
   ui->showBox->setStyleSheet("QListWidget{background-color:#f8f8ff;border:none;}");
   ui->showBox->setSpacing(30);
   ui->showBox->setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
-  //cout << ite << endl;
   nowList = newList;
 }
 MainWindow::~MainWindow()
@@ -418,30 +316,6 @@ void MainWindow::sort1(){
   while(index < ui->showBox->count()) {
       ui->showBox->takeItem(index);
     }
-  sortTime(1);
-  showDiarysorted();
-}
-void MainWindow::sort2(){
-  int index = 0;
-  while(index < ui->showBox->count()) {
-      ui->showBox->takeItem(index);
-    }
-  sortTime(2);
-  showDiarysorted();
-}
-void MainWindow::sort3(){
-  int index = 0;
-  while(index < ui->showBox->count()) {
-      ui->showBox->takeItem(index);
-    }
-  sortTime(3);
-  showDiarysorted();
-}
-void MainWindow::sort4(){
-  int index = 0;
-  while(index < ui->showBox->count()) {
-      ui->showBox->takeItem(index);
-    }
-  sortTime(4);
+  nowList.sort(sortEditDecrease);
   showDiarysorted();
 }

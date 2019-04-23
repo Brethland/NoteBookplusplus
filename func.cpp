@@ -28,14 +28,14 @@ string CharToStr(char * contentChar)
 void addDiary(string title,string text,int catagory) {
   int totalDiaryNumber;
   ifstream fin;
-  string thisPath = "C:/Users/ycy12/Documents/Workspace/Notebook/doc/metaData.txt";
+  string thisPath = "doc/metaData.txt";
   fin.open(thisPath);
   string lineCollector;
   fin >> lineCollector;
   char *st1 = const_cast<char *>(lineCollector.c_str());
   sscanf(st1,"TotalDiary:%d",&totalDiaryNumber);
   ofstream fout,changelog;
-  fout.open("C:/Users/ycy12/Documents/Workspace/Notebook/doc/" + to_string(totalDiaryNumber + 1) + ".txt");
+  fout.open("doc/" + to_string(totalDiaryNumber + 1) + ".txt");
   Diary bufferIn(totalDiaryNumber + 1,title,text,catagory,time(0),time(0),0);
   fout << bufferIn.isDeleted << endl;
   fout << bufferIn.sid << endl;
@@ -54,19 +54,8 @@ void addDiary(string title,string text,int catagory) {
 
 void updateDiary(int sid,string title,string txt) {
   ifstream fin;
-  string changePath = "C:/Users/ycy12/Documents/Workspace/Notebook/doc/" + to_string(sid) + ".txt";
+  string changePath = "doc/" + to_string(sid) + ".txt";
   fin.open(changePath);
-  /*QFile file(QString(changePath));
-  QTextStream in(&file);
-  QString str = in.readLine();
-  long streamin[10];
-  int index = 1;
-  QFile file(QString(changePath));
-  while(index<=6) {
-      QByteArray str = file.readLine();
-      QString line(str);
-       streamin[index++] = line.toLong();
-    }*/
   string FileOutput = "";
   int line = 1;
   char tmpLineData[1024] = {0};
@@ -85,14 +74,13 @@ void updateDiary(int sid,string title,string txt) {
   ofstream fout;
   fout.open(changePath);
   fout << FileOutput << title << endl << txt;
-  //fout << sid << endl << streamin[2] << endl << streamin[3] << endl << (long)time(0) << endl << streamin[5] << endl << streamin[6] << endl << title << endl << txt;
   fout.close();
   fin.close();
 
 }
 
 void deleteDiary(int sid){
-    string changePath = "C:/Users/ycy12/Documents/Workspace/Notebook/doc/" + to_string(sid) + ".txt";
+    string changePath = "doc/" + to_string(sid) + ".txt";
     ifstream fin;
     fin.open(changePath);
     string FileOutput = "";
@@ -120,8 +108,11 @@ void deleteDiary(int sid){
 list<Diary> fetchAll(){
   int totalDiaryNumber;
   ifstream foc;
-  string thisPath = "C:/Users/ycy12/Documents/Workspace/Notebook/doc/metaData.txt";
+  ofstream errorstate;
+  string thisPath = "doc/metaData.txt";
+  errorstate.open(thisPath);
   foc.open(thisPath);
+  errorstate.close();
   string lineCollector;
   foc >> lineCollector;
   foc.close();
@@ -131,7 +122,7 @@ list<Diary> fetchAll(){
   list<Diary> DiaryList;
   while(goForNumber<=totalDiaryNumber){
       ifstream fin;
-      string nowPath = "C:/Users/ycy12/Documents/Workspace/Notebook/doc/" + to_string(goForNumber) + ".txt";
+      string nowPath = "doc/" + to_string(goForNumber) + ".txt";
       fin.open(nowPath);
       char tmpLineData[1024] = {0};
       Diary bufferIn(1,"1","1",1,1,1,1);
@@ -162,15 +153,13 @@ list<Diary> fetchAll(){
       goForNumber++;
       fin.close();
     }
-  //cout << "Succeed!" << endl;
   return DiaryList;
 }
 
 list<Diary> filterByMethod(int catagoryMethod){
-  //int testnumber = 0;
   int totalDiaryNumber;
   ifstream foc;
-  string thisPath = "C:/Users/ycy12/Documents/Workspace/Notebook/doc/metaData.txt";
+  string thisPath = "doc/metaData.txt";
   foc.open(thisPath);
   string lineCollector;
   foc >> lineCollector;
@@ -181,7 +170,7 @@ list<Diary> filterByMethod(int catagoryMethod){
   list<Diary> DiaryList;
   while(goForNumber <= totalDiaryNumber){
       ifstream fin;
-      string nowPath = "C:/Users/ycy12/Documents/Workspace/Notebook/doc/" + to_string(goForNumber) + ".txt";
+      string nowPath = "doc/" + to_string(goForNumber) + ".txt";
       fin.open(nowPath);
       char tmpLineData[1024] = {0};
       Diary bufferIn(1,"1","1",1,1,1,1);
@@ -195,17 +184,9 @@ list<Diary> filterByMethod(int catagoryMethod){
       fin.getline(tmpLineData,sizeof(tmpLineData));
       bufferIn.sid = atoi(tmpLineData);
       fin.getline(tmpLineData,sizeof(tmpLineData));
-      /*if(atoi(tmpLineData) != catagoryMethod){
-          //testnumber++;
-          continue;
-        }else {
-        bufferIn.catagory = atoi(tmpLineData);
-        }*/
-      //bufferIn.catagory = atoi(tmpLineData);
       if(catagoryMethod == atoi(tmpLineData)){
           bufferIn.catagory = catagoryMethod;
         }else {
-          //testnumber++;
           goForNumber++;
           continue;
         }
@@ -225,12 +206,11 @@ list<Diary> filterByMethod(int catagoryMethod){
       goForNumber++;
       fin.close();
     }
-  //cout << testnumber << endl;
   return DiaryList;
 }
 
 string lockMainWindow(){
-  string thisPath = "C:/Users/ycy12/Documents/Workspace/Notebook/doc/crypto.txt";
+  string thisPath = "doc/crypto.txt";
   ifstream fin;
   fin.open(thisPath);
   char tmpData[1024] = {0};

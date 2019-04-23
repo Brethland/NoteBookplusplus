@@ -35,7 +35,7 @@ settings::~settings()
 void settings::on_passConfirm_clicked()
 {
      ofstream fout;
-     fout.open("C:/Users/ycy12/Documents/Workspace/Notebook/doc/crypto.txt");
+     fout.open("doc/crypto.txt");
      QString input_ = ui->pass->toPlainText();
      string input = input_.toStdString();
      unsigned char *st1 = (unsigned char *)(input.c_str());
